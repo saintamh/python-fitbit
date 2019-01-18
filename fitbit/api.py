@@ -618,6 +618,28 @@ class Fitbit(object):
         )
         return self.make_request(url)
 
+    def activity_logs_list(self, user_id=None, before_date=None, after_date=None, offset=0, limit=20):
+        """
+        https://dev.fitbit.com/build/reference/web-api/activity/#get-activity-logs-list
+        """
+        if bool(before_date) == bool(after_date):
+            raise TypeError("Exactly one of `before_date` and `after_date` must be specified")
+
+        params = {
+            'sort': 'desc' if before_date else 'asc',
+            'offset': '%d' % offset,
+            'limit': '%d' % limit,
+        }
+        if before_date:
+            params['beforeDate'] = before_date
+        else:
+            params['afterDate'] = after_date
+
+        url = "{0}/{1}/user/{2}/activities/list.json".format(
+            *self._get_common_args(user_id),
+        )
+        return self.make_request(url, params=params)
+
     def _food_stats(self, user_id=None, qualifier=''):
         """
         This builds the convenience methods on initialization::
