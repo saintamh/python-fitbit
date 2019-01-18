@@ -141,9 +141,9 @@ class FitbitOauth2Client(object):
             self.session.redirect_uri = redirect_uri
         return self.session.fetch_token(
             self.access_token_url,
-            username=self.client_id,
-            password=self.client_secret,
-            code=code)
+            auth=HTTPBasicAuth(self.client_id, self.client_secret),
+            code=code,
+        )
 
     def refresh_token(self):
         """Step 3: obtains a new access_token from the the refresh token
